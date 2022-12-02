@@ -10,7 +10,6 @@ import (
 var ErrInvalidString = errors.New("invalid string")
 
 func Unpack(inputString string) (string, error) {
-
 	var b strings.Builder
 
 	for position := 0; position < len(inputString); position++ {
