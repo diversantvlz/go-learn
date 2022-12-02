@@ -19,11 +19,11 @@ func Unpack(inputString string) (string, error) {
 		}
 
 		if inputString[position] == 92 {
-			if len(inputString) == position+1 || !unicode.IsDigit(rune(inputString[position+1])) {
+			if len(inputString) > position+1 && (unicode.IsDigit(rune(inputString[position+1])) || inputString[position+1] == 92) {
+				position++
+			} else {
 				return inputString, ErrInvalidString
 			}
-
-			position++
 		}
 
 		if len(inputString) > position+1 && unicode.IsDigit(rune(inputString[position+1])) {
