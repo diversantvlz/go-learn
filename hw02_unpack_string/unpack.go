@@ -12,28 +12,29 @@ var ErrInvalidString = errors.New("invalid string")
 func Unpack(inputString string) (string, error) {
 	var b strings.Builder
 
-	for position := 0; position < len(inputString); position++ {
-		if unicode.IsDigit(rune(inputString[position])) {
+	runes := []rune(inputString)
+	for position := 0; position < len(runes); position++ {
+		if unicode.IsDigit(runes[position]) {
 			return inputString, ErrInvalidString
 		}
 
-		if inputString[position] == 92 {
-			if len(inputString) > position+1 &&
-				(unicode.IsDigit(rune(inputString[position+1])) || inputString[position+1] == 92) {
+		if runes[position] == 92 {
+			if len(runes) > position+1 &&
+				(unicode.IsDigit(runes[position+1]) || runes[position+1] == 92) {
 				position++
 			} else {
 				return inputString, ErrInvalidString
 			}
 		}
 
-		if len(inputString) > position+1 && unicode.IsDigit(rune(inputString[position+1])) {
-			count, _ := strconv.Atoi(string(inputString[position+1]))
+		if len(runes) > position+1 && unicode.IsDigit(runes[position+1]) {
+			count, _ := strconv.Atoi(string(runes[position+1]))
 			if count > 0 {
-				b.WriteString(strings.Repeat(string(inputString[position]), count))
+				b.WriteString(strings.Repeat(string(runes[position]), count))
 			}
 			position++
 		} else {
-			b.WriteByte(inputString[position])
+			b.WriteRune(runes[position])
 		}
 	}
 
