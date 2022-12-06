@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-var dotsRe = regexp.MustCompile(`[,.!?'"]`)
+var dotsRe = regexp.MustCompile(`[-,.!?'"]`)
 
 func Top10(inputString string) []string {
 	inputString = dotsRe.ReplaceAllString(inputString, "")
@@ -18,10 +18,6 @@ func Top10(inputString string) []string {
 	}
 
 	for _, value := range words {
-		if "-" == value {
-			continue
-		}
-
 		counts[value]++
 	}
 
