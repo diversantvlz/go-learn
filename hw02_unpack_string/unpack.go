@@ -7,7 +7,7 @@ import (
 	"unicode"
 )
 
-const CHAR_BACKSLASH = 92
+const CharBackslash = 92
 
 var ErrInvalidString = errors.New("invalid string")
 
@@ -20,9 +20,9 @@ func Unpack(inputString string) (string, error) {
 			return inputString, ErrInvalidString
 		}
 
-		if CHAR_BACKSLASH == runes[position] {
+		if CharBackslash == runes[position] {
 			if len(runes) > position+1 &&
-				(unicode.IsDigit(runes[position+1]) || CHAR_BACKSLASH == runes[position+1]) {
+				(unicode.IsDigit(runes[position+1]) || CharBackslash == runes[position+1]) {
 				position++
 			} else {
 				return inputString, ErrInvalidString
