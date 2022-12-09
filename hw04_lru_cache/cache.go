@@ -48,7 +48,10 @@ func (cache *lruCache) Get(key Key) (interface{}, bool) {
 }
 
 func (cache *lruCache) Clear() {
-
+	cache.items = map[Key]*ListItem{}
+	for item := cache.queue.Front(); item != nil; item = item.Next {
+		cache.queue.Remove(item)
+	}
 }
 
 func NewCache(capacity int) Cache {
