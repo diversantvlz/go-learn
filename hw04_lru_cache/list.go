@@ -26,23 +26,6 @@ func (l *list) Len() int {
 	return l.len
 }
 
-func (l *list) insert(v interface{}) *ListItem {
-	item := &ListItem{Value: v}
-	if nil == l.front {
-		l.front = item
-		l.front.Prev = item
-		l.front.Next = item
-	} else {
-		item.Prev = l.front.Prev
-		item.Next = l.front
-		l.front.Prev = item
-		item.Prev.Next = item
-	}
-
-	l.len++
-
-	return item
-}
 func (l *list) PushFront(v interface{}) *ListItem {
 	item := &ListItem{Value: v}
 	if nil == l.front {
