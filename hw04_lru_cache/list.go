@@ -27,11 +27,8 @@ func (l *list) Len() int {
 }
 
 func (l *list) PushFront(v interface{}) *ListItem {
-	item := &ListItem{Value: v}
-	if nil == l.front {
-		l.front = item
-		l.back = item
-	} else {
+	item, isNotFirst := l.initItem(v)
+	if isNotFirst {
 		item.Next = l.front
 		l.front.Prev = item
 		l.front = item
@@ -43,11 +40,8 @@ func (l *list) PushFront(v interface{}) *ListItem {
 }
 
 func (l *list) PushBack(v interface{}) *ListItem {
-	item := &ListItem{Value: v}
-	if nil == l.front {
-		l.front = item
-		l.back = item
-	} else {
+	item, isNotFirst := l.initItem(v)
+	if isNotFirst {
 		item.Prev = l.back
 		l.back.Next = item
 		l.back = item
@@ -81,6 +75,18 @@ func (l *list) Remove(i *ListItem) {
 	}
 
 	l.len--
+}
+
+func (l *list) initItem(v interface{}) (*ListItem, bool) {
+	item := &ListItem{Value: v}
+	if nil == l.back && nil == l.front {
+		l.front = item
+		l.back = item
+
+		return item, false
+	}
+
+	return item, true
 }
 
 func (l *list) MoveToFront(i *ListItem) {
