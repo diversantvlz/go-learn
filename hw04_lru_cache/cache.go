@@ -33,6 +33,7 @@ func (cache *lruCache) Set(key Key, value interface{}) bool {
 		for removeKey, searchItem := range cache.items {
 			if searchItem == removedItem {
 				delete(cache.items, removeKey)
+				break
 			}
 		}
 		cache.queue.Remove(removedItem)
