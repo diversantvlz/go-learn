@@ -25,20 +25,20 @@ func (cache *lruCache) Set(key Key, value interface{}) bool {
 		cache.queue.MoveToFront(item)
 
 		return true
-	} else {
-		cache.items[key] = cache.queue.PushFront(value)
-		if cache.capacity < cache.queue.Len() {
-			removedItem := cache.queue.Back()
-			for removeKey, searchItem := range cache.items {
-				if searchItem == removedItem {
-					delete(cache.items, removeKey)
-				}
-			}
-			cache.queue.Remove(removedItem)
-		}
-
-		return false
 	}
+
+	cache.items[key] = cache.queue.PushFront(value)
+	if cache.capacity < cache.queue.Len() {
+		removedItem := cache.queue.Back()
+		for removeKey, searchItem := range cache.items {
+			if searchItem == removedItem {
+				delete(cache.items, removeKey)
+			}
+		}
+		cache.queue.Remove(removedItem)
+	}
+
+	return false
 }
 
 func (cache *lruCache) Get(key Key) (interface{}, bool) {
