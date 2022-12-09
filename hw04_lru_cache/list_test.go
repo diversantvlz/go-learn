@@ -73,7 +73,7 @@ func TestList(t *testing.T) {
 		require.Equal(t, 1, l.Len())
 
 		back := l.PushBack(20)
-		l.MoveToFront(&ListItem{Value: 10})
+		l.MoveToFront(&ListItem{Value: 20})
 		require.Equal(t, back, l.Back())
 	})
 }

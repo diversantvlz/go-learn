@@ -11,7 +11,7 @@ type List interface {
 }
 
 type ListItem struct {
-	List  *list
+	list  *list
 	Value interface{}
 	Next  *ListItem
 	Prev  *ListItem
@@ -62,7 +62,7 @@ func (l *list) Back() *ListItem {
 }
 
 func (l *list) Remove(i *ListItem) {
-	if l != i.List {
+	if l != i.list {
 		return
 	}
 
@@ -83,7 +83,7 @@ func (l *list) Remove(i *ListItem) {
 }
 
 func (l *list) initItem(v interface{}) (*ListItem, bool) {
-	item := &ListItem{Value: v, List: l}
+	item := &ListItem{Value: v, list: l}
 	if nil == l.back || nil == l.front {
 		l.front = item
 		l.back = item
@@ -95,7 +95,7 @@ func (l *list) initItem(v interface{}) (*ListItem, bool) {
 }
 
 func (l *list) MoveToFront(i *ListItem) {
-	if l != i.List {
+	if l != i.list {
 		return
 	}
 
