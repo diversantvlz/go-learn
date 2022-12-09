@@ -17,26 +17,35 @@ type lruCache struct {
 	items    map[Key]*ListItem
 }
 
+type cacheItem struct {
+	key   Key
+	value interface{}
+}
+
 func (cache *lruCache) Set(key Key, value interface{}) bool {
 	cache.mx.Lock()
 	defer cache.mx.Unlock()
 	if item, exist := cache.items[key]; exist {
-		item.Value = value
+		item.Value = cacheItem{
+			key:   key,
+			value: value,
+		}
+
 		cache.queue.MoveToFront(item)
 
 		return true
 	}
 
-	cache.items[key] = cache.queue.PushFront(value)
+	cache.items[key] = cache.queue.PushFront(cacheItem{
+		key:   key,
+		value: value,
+	})
+
 	if cache.capacity < cache.queue.Len() {
-		removedItem := cache.queue.Back()
-		for removeKey, searchItem := range cache.items {
-			if searchItem == removedItem {
-				delete(cache.items, removeKey)
-				break
-			}
-		}
-		cache.queue.Remove(removedItem)
+		back := cache.queue.Back()
+		removedItem, _ := back.Value.(cacheItem)
+		delete(cache.items, removedItem.key)
+		cache.queue.Remove(back)
 	}
 
 	return false
@@ -47,7 +56,8 @@ func (cache *lruCache) Get(key Key) (interface{}, bool) {
 	defer cache.mx.RUnlock()
 	if item, exist := cache.items[key]; exist {
 		cache.queue.MoveToFront(item)
-		return item.Value, true
+		itemValie, _ := item.Value.(cacheItem)
+		return itemValie.value, true
 	}
 
 	return nil, false
