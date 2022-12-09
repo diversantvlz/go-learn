@@ -71,6 +71,29 @@ func TestCache(t *testing.T) {
 			require.False(t, ok)
 		}
 	})
+
+	t.Run("oversize logic", func(t *testing.T) {
+		c := NewCache(2)
+		c.Set("a", 1)
+		c.Set("b", 2)
+		c.Set("c", 3)
+
+		_, notOk := c.Get("aaa")
+		require.False(t, notOk)
+	})
+
+	t.Run("oldest logic", func(t *testing.T) {
+		c := NewCache(3)
+		c.Set("a", 1)
+		c.Set("b", 2)
+		c.Set("c", 3)
+		c.Get("a")
+		c.Get("c")
+		c.Set("d", 4)
+
+		_, notOk := c.Get("b")
+		require.False(t, notOk)
+	})
 }
 
 func TestCacheMultithreading(t *testing.T) {
