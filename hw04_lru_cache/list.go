@@ -79,7 +79,7 @@ func (l *list) Remove(i *ListItem) {
 
 func (l *list) initItem(v interface{}) (*ListItem, bool) {
 	item := &ListItem{Value: v}
-	if nil == l.back && nil == l.front {
+	if nil == l.back || nil == l.front {
 		l.front = item
 		l.back = item
 
