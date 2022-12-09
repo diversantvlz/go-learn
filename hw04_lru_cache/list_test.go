@@ -64,4 +64,16 @@ func TestList(t *testing.T) {
 
 		require.Equal(t, i, l.Len())
 	})
+
+	t.Run("foreign element", func(t *testing.T) {
+		l := NewList()
+
+		l.PushFront(10)
+		l.Remove(&ListItem{Value: 10})
+		require.Equal(t, 1, l.Len())
+
+		back := l.PushBack(20)
+		l.MoveToFront(&ListItem{Value: 10})
+		require.Equal(t, back, l.Back())
+	})
 }
