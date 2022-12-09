@@ -50,17 +50,26 @@ func TestCache(t *testing.T) {
 	})
 
 	t.Run("purge logic", func(t *testing.T) {
-		c := NewCache(5)
-		c.Set("aaa", 100)
+		c := NewCache(3)
+		dataset := map[string]int{
+			"aaa": 100,
+			"bbb": 200,
+			"ccc": 300,
+		}
 
-		val, ok := c.Get("aaa")
-		require.True(t, ok)
-		require.Equal(t, 100, val)
+		for key, value := range dataset {
+			c.Set(Key(key), value)
+			val, ok := c.Get(Key(key))
+			require.True(t, ok)
+			require.Equal(t, value, val)
+		}
 
 		c.Clear()
 
-		val, ok = c.Get("aaa")
-		require.False(t, ok)
+		for key := range dataset {
+			_, ok := c.Get(Key(key))
+			require.False(t, ok)
+		}
 	})
 }
 
