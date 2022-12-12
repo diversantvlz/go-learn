@@ -66,7 +66,7 @@ func (cache *lruCache) Get(key Key) (interface{}, bool) {
 func (cache *lruCache) Clear() {
 	cache.mx.Lock()
 	defer cache.mx.Unlock()
-	cache.items = map[Key]*ListItem{}
+	cache.items = make(map[Key]*ListItem, cache.capacity)
 	for item := cache.queue.Front(); item != nil; item = item.Next {
 		cache.queue.Remove(item)
 	}
