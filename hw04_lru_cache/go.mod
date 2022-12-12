@@ -1,4 +1,4 @@
-module github.com/diversantvlz/go-learn/tree/hw04_lru_cache
+module github.com/diversantvlz/go-learn/hw04_lru_cache
 
 go 1.16
 
