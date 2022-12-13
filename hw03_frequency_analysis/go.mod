@@ -1,4 +1,4 @@
-module github.com/diversantvlz/go-learn/tree/hw03_frequency_analysis
+module github.com/diversantvlz/go-learn/hw03_frequency_analysis
 
 go 1.16
 
