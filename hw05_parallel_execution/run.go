@@ -3,6 +3,7 @@ package hw05parallelexecution
 import (
 	"errors"
 	"sync"
+	"sync/atomic"
 )
 
 var ErrErrorsLimitExceeded = errors.New("errors limit exceeded")
@@ -16,8 +17,8 @@ type Queue struct {
 }
 
 func (q *Queue) get() Task {
-	q.RLock()
-	defer q.RUnlock()
+	q.Lock()
+	defer q.Unlock()
 
 	if q.index == len(q.tasks) {
 		return nil
@@ -32,14 +33,14 @@ func (q *Queue) get() Task {
 // Run starts tasks in n goroutines and stops its work when receiving m errors from tasks.
 func Run(tasks []Task, n, m int) error {
 	wg := &sync.WaitGroup{}
-	wg.Add(n)
 	queue := Queue{tasks: tasks}
+	var errCnt int32
 
 	for i := 0; i < n; i++ {
 		go func() {
 			defer wg.Done()
 			for {
-				if m == 0 {
+				if atomic.LoadInt32(&errCnt) >= int32(m) {
 					break
 				}
 
@@ -48,16 +49,18 @@ func Run(tasks []Task, n, m int) error {
 					break
 				}
 
-				if task() != nil && m > 0 {
-					m--
+				if task() != nil {
+					atomic.AddInt32(&errCnt, 1)
 				}
 			}
 		}()
+
+		wg.Add(1)
 	}
 
 	wg.Wait()
 
-	if m == 0 {
+	if errCnt >= int32(m) {
 		return ErrErrorsLimitExceeded
 	}
 
