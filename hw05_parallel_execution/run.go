@@ -38,8 +38,8 @@ func Run(tasks []Task, n, m int) error {
 	for i := 0; i < n; i++ {
 		go func() {
 			defer wg.Done()
-			for true {
-				if 0 == m {
+			for {
+				if m == 0 {
 					break
 				}
 
@@ -48,7 +48,7 @@ func Run(tasks []Task, n, m int) error {
 					break
 				}
 
-				if nil != task() && m > 0 {
+				if task() != nil && m > 0 {
 					m--
 				}
 			}
@@ -57,7 +57,7 @@ func Run(tasks []Task, n, m int) error {
 
 	wg.Wait()
 
-	if 0 == m {
+	if m == 0 {
 		return ErrErrorsLimitExceeded
 	}
 
