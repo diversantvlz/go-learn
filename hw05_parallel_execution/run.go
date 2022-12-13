@@ -35,9 +35,9 @@ func Run(tasks []Task, n, m int) error {
 	wg := &sync.WaitGroup{}
 	queue := Queue{tasks: tasks}
 	var errCnt int32
-
+	wg.Add(n)
 	for i := 0; i < n; i++ {
-		go func() {
+		go func(wg *sync.WaitGroup) {
 			defer wg.Done()
 			for {
 				if atomic.LoadInt32(&errCnt) >= int32(m) {
@@ -53,9 +53,7 @@ func Run(tasks []Task, n, m int) error {
 					atomic.AddInt32(&errCnt, 1)
 				}
 			}
-		}()
-
-		wg.Add(1)
+		}(wg)
 	}
 
 	wg.Wait()
