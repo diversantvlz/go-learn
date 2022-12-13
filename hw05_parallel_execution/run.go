@@ -39,18 +39,16 @@ func Run(tasks []Task, n, m int) error {
 		go func() {
 			defer wg.Done()
 			for true {
-				if 0 >= m {
+				if 0 == m {
 					break
 				}
 
 				task := queue.get()
-
 				if nil == task {
 					break
 				}
 
-				result := task()
-				if nil != result {
+				if nil != task() && m > 0 {
 					m--
 				}
 			}
@@ -59,7 +57,7 @@ func Run(tasks []Task, n, m int) error {
 
 	wg.Wait()
 
-	if 0 >= m {
+	if 0 == m {
 		return ErrErrorsLimitExceeded
 	}
 
