@@ -22,7 +22,7 @@ func ExecutePipeline(in In, done In, stages ...Stage) Out {
 			case <-done:
 				return
 			case val, ok := <-in:
-				if ok == false {
+				if !ok {
 					return
 				}
 				out <- val
