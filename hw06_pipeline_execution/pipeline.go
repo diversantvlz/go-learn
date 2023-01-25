@@ -14,13 +14,19 @@ func ExecutePipeline(in In, done In, stages ...Stage) Out {
 	go func() {
 		defer close(out)
 		for _, stage := range stages {
-			if done != nil && <-done == nil {
-				return
-			}
 			in = stage(in)
 		}
-		for v := range in {
-			out <- v
+
+		for {
+			select {
+			case <-done:
+				return
+			case val, ok := <-in:
+				if ok == false {
+					return
+				}
+				out <- val
+			}
 		}
 	}()
 
