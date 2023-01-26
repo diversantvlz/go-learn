@@ -71,20 +71,29 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 	pb.Start(limit)
 	dst, err := os.Create(toPath)
 	if err != nil {
+		pb.Finish()
 		return err
 	}
 
 	_, err = src.Seek(offset, io.SeekStart)
 	if err != nil {
+		pb.Finish()
 		return err
 	}
 
-	result, err := io.CopyN(dst, src, limit)
-	pb.Advance(result)
+	for i := int64(1); i <= limit; i++ {
+		result, err := io.CopyN(dst, src, 1)
+		if err != nil {
+			pb.Finish()
+			return err
+		}
+		pb.Advance(result)
+	}
+
 	pb.Finish()
 
 	_ = src.Close()
 	_ = dst.Close()
 
-	return err
+	return nil
 }
