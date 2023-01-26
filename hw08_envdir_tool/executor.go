@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"os"
 	"os/exec"
 )
@@ -27,8 +28,9 @@ func RunCmd(cmd []string, env Environment) (returnCode int) {
 
 	err := command.Run()
 	if err != nil {
-		if exiterr, ok := err.(*exec.ExitError); ok {
-			return exiterr.ExitCode()
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) {
+			return exitErr.ExitCode()
 		}
 
 		panic(err)

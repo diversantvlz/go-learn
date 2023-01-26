@@ -16,4 +16,14 @@ func TestRunCmd(t *testing.T) {
 
 		require.Equal(t, 0, code)
 	})
+
+	t.Run("exec", func(t *testing.T) {
+		envs, _ := ReadDir("testdata/env")
+		code := RunCmd([]string{
+			"/bin/bash",
+			"echo 123",
+		}, envs)
+
+		require.Equal(t, 127, code)
+	})
 }
