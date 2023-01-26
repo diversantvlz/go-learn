@@ -36,7 +36,7 @@ func (pb *ProgressBar) Finish() {
 
 func (pb *ProgressBar) print() {
 	percent := int64((float32(pb.progress) / float32(pb.total)) * 100)
-	fmt.Printf("\r[%-100s]%d%% %d/%d", strings.Repeat("=", int(percent)), percent, pb.progress, pb.total)
+	fmt.Printf("\r[%-100s]%d%% %d/%d bytes", strings.Repeat("=", int(percent)), percent, pb.progress, pb.total)
 }
 
 func Copy(fromPath, toPath string, offset, limit int64) error {
