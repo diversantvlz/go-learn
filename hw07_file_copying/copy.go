@@ -40,13 +40,19 @@ func (pb *ProgressBar) print() {
 }
 
 func Copy(fromPath, toPath string, offset, limit int64) error {
-	pb := ProgressBar{}
+	if fromPath == toPath {
+		return nil
+	}
+
 	src, err := os.Open(fromPath)
 	if err != nil {
 		return err
 	}
 
-	stat, _ := src.Stat()
+	stat, err := src.Stat()
+	if err != nil {
+		return err
+	}
 
 	if stat.Size() == 0 || stat.IsDir() {
 		return ErrUnsupportedFile
@@ -61,13 +67,14 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 		limit = maxLimit
 	}
 
+	pb := ProgressBar{}
 	pb.Start(limit)
 	dst, err := os.Create(toPath)
 	if err != nil {
 		return err
 	}
 
-	_, err = src.Seek(offset, 0)
+	_, err = src.Seek(offset, io.SeekStart)
 	if err != nil {
 		return err
 	}
