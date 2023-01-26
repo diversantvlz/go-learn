@@ -1,7 +1,20 @@
 package main
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/require"
+)
 
 func TestReadDir(t *testing.T) {
-	// Place your code here
+	t.Run("read dir", func(t *testing.T) {
+		envs, err := ReadDir("testdata/env")
+
+		require.NoError(t, err)
+		require.Equal(t, "bar\nPLEASE IGNORE SECOND LINE\n", envs["BAR"].Value)
+		require.Equal(t, " \n", envs["EMPTY"].Value)
+		require.Equal(t, "   foo\nwith new line", envs["FOO"].Value)
+		require.Equal(t, "\"hello\"", envs["HELLO"].Value)
+		require.Equal(t, "", envs["UNSET"].Value)
+	})
 }
