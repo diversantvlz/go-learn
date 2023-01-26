@@ -34,12 +34,17 @@ func ReadDir(dir string) (Environment, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		env := EnvValue{}
 
 		if len(content) == 0 {
 			env.NeedRemove = true
 		} else {
-			_, firstLine, _ := bufio.ScanLines(content, true)
+			_, firstLine, err := bufio.ScanLines(content, true)
+			if err != nil {
+				return nil, err
+			}
+
 			firstLine = bytes.ReplaceAll(firstLine, []byte{0x00}, []byte("\n"))
 			env.Value = strings.TrimRight(string(firstLine[:]), " \t")
 		}
