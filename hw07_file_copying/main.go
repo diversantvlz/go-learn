@@ -23,7 +23,6 @@ func main() {
 	fmt.Println()
 
 	err := Copy(from, to, offset, limit)
-
 	if err != nil {
 		panic(err)
 	}
