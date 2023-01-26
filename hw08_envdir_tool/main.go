@@ -11,8 +11,5 @@ func main() {
 		panic(err)
 	}
 
-	code := RunCmd(args[2:], env)
-	if code > 0 {
-		panic(code)
-	}
+	os.Exit(RunCmd(args[2:], env))
 }

@@ -1,8 +1,6 @@
 package main
 
 import (
-	"bytes"
-	"fmt"
 	"os"
 	"os/exec"
 )
@@ -23,15 +21,18 @@ func RunCmd(cmd []string, env Environment) (returnCode int) {
 	}
 
 	command := exec.Command(cmd[0], cmd[1:]...)
-
-	var out bytes.Buffer
-	command.Stdout = &out
+	command.Stdout = os.Stdout
+	command.Stdin = os.Stdin
+	command.Stderr = os.Stderr
 
 	err := command.Run()
 	if err != nil {
+		if exiterr, ok := err.(*exec.ExitError); ok {
+			return exiterr.ExitCode()
+		}
+
 		panic(err)
 	}
 
-	fmt.Println(out.String())
 	return 0
 }
