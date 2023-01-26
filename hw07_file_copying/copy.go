@@ -41,7 +41,7 @@ func (pb *ProgressBar) print() {
 
 func Copy(fromPath, toPath string, offset, limit int64) error {
 	if fromPath == toPath {
-		return nil
+		return ErrUnsupportedFile
 	}
 
 	src, err := os.Open(fromPath)
