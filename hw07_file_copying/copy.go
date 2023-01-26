@@ -30,9 +30,13 @@ func (pb *ProgressBar) Advance(value int64) {
 	pb.print()
 }
 
+func (pb *ProgressBar) Finish() {
+	fmt.Println()
+}
+
 func (pb *ProgressBar) print() {
 	percent := int64((float32(pb.progress) / float32(pb.total)) * 100)
-	fmt.Printf("\r[%-100s]%3d%% %8d/%d", strings.Repeat("=", int(percent)), percent, pb.progress, pb.total)
+	fmt.Printf("\r[%-100s]%d%% %d/%d", strings.Repeat("=", int(percent)), percent, pb.progress, pb.total)
 }
 
 func Copy(fromPath, toPath string, offset, limit int64) error {
@@ -70,6 +74,10 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 
 	result, err := io.CopyN(dst, src, limit)
 	pb.Advance(result)
+	pb.Finish()
+
+	_ = src.Close()
+	_ = dst.Close()
 
 	return err
 }
