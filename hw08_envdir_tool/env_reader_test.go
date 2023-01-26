@@ -11,8 +11,8 @@ func TestReadDir(t *testing.T) {
 		envs, err := ReadDir("testdata/env")
 
 		require.NoError(t, err)
-		require.Equal(t, "bar\nPLEASE IGNORE SECOND LINE\n", envs["BAR"].Value)
-		require.Equal(t, " \n", envs["EMPTY"].Value)
+		require.Equal(t, "bar", envs["BAR"].Value)
+		require.Equal(t, "", envs["EMPTY"].Value)
 		require.Equal(t, "   foo\nwith new line", envs["FOO"].Value)
 		require.Equal(t, "\"hello\"", envs["HELLO"].Value)
 		require.Equal(t, "", envs["UNSET"].Value)

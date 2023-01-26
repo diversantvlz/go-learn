@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"os"
+	"strings"
 )
 
 type Environment map[string]EnvValue
@@ -32,9 +34,15 @@ func ReadDir(dir string) (Environment, error) {
 		if err != nil {
 			return nil, err
 		}
+		env := EnvValue{}
 
-		content = bytes.ReplaceAll(content, []byte{0x00}, []byte("\n"))
-		env := EnvValue{Value: string(content[:])}
+		if len(content) == 0 {
+			env.NeedRemove = true
+		} else {
+			_, firstLine, _ := bufio.ScanLines(content, true)
+			firstLine = bytes.ReplaceAll(firstLine, []byte{0x00}, []byte("\n"))
+			env.Value = strings.TrimRight(string(firstLine[:]), " \t")
+		}
 		environment[entity.Name()] = env
 	}
 
