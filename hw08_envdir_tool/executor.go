@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"os/exec"
 )
@@ -21,6 +22,11 @@ func RunCmd(cmd []string, env Environment) (returnCode int) {
 		}
 	}
 
+	if len(cmd) == 0 {
+		fmt.Println("command name is required")
+		return 1
+	}
+
 	commandName := cmd[0]
 	commandArgs := cmd[1:]
 
@@ -36,7 +42,8 @@ func RunCmd(cmd []string, env Environment) (returnCode int) {
 			return exitErr.ExitCode()
 		}
 
-		panic(err)
+		fmt.Println(err)
+		return 1
 	}
 
 	return 0
