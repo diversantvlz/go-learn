@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"os"
 )
 
 var (
@@ -18,5 +20,12 @@ func init() {
 
 func main() {
 	flag.Parse()
-	// Place your code here.
+	fmt.Printf("Coping %s to %s offset %d limit %d", from, to, offset, limit)
+	fmt.Println()
+
+	err := Copy(from, to, offset, limit)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
